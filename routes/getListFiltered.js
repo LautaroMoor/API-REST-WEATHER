@@ -1,13 +1,13 @@
 const { Router } = require('express');
 const {
-    getListBySunnyDays,
+    getListWithDifferentUnits,
     getListByRainyDays,
     getListByCloudyDays
 } = require('../controllers/getListFiltered');
 
 const rutas = Router();
 
-rutas.get('/sunny', getListBySunnyDays);
+rutas.get('/next30WeatherUnits', getListWithDifferentUnits);
 rutas.get('/rainy', getListByRainyDays);
 rutas.get('/cloudy', getListByCloudyDays);
 
