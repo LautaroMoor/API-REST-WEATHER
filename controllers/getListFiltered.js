@@ -3,45 +3,62 @@ const { request, response} = require('express');
 
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 
-const getListBySunnyDays = async (req = request, res = response) => {  
-    console.log("Codigo list by sunny days");
+// Lautaro
+const getListWithDifferentUnits = async (req = request, res = response) => {  
     try {
-        const { city, days } = req.query; //Pedir en la query la city
-    
-        const response = await axios.get('http://api.openweathermap.org/data/2.5/forecast', {
+        const { city, units } = req.query;
+
+        //Segun la API
+        // ***Units***: standard, 
+        //              metric 
+        //              imperial
+        // If you do not use the units parameter, standard units will be applied by default.
+
+        // Realiza una solicitud a la API de OpenWeatherMap para obtener el pronóstico extendido
+        const response = await axios.get(
+            'https://api.openweathermap.org/data/2.5/forecast', {
             params: {
-                q: city,
-                cnt:  days * 8,  // número especificado de días (8 registros por día)
-                appid: OPENWEATHERMAP_API_KEY,
-                units: 'metric', // temperatura en Celsius
+            q: city,
+            cnt: 30,
+            lang:"es",
+            appid: OPENWEATHERMAP_API_KEY,
+            units: units ? units : 'standart' , 
             },
         });
-    
-        // Filtra los días soleados
-        const sunnyDays = response.data.list.filter(day => {
-            // Día soleado si la descripción contiene "clear" (despejado)
-            return day.weather.some(weather => weather.description.toLowerCase().includes('clear'));
-        });
-    
-        res.json({ sunnyDays });
-        } catch (error) {
-            console.error('Error al obtener los datos del clima', error);
-            res.status(500).json({ error: 'Error al obtener los datos del clima' });
+        
+        const pronostico = response.data;
+        // console.log(response);
+        res.status(response.status).json(pronostico.list);
+    } catch (error) {
+        if (error.response) {
+            // Si hay una respuesta de error desde la API de OpenWeatherMap
+            res.status(error.response.status).json({
+            cod: error.response.data.cod,
+            message: error.response.data.message,
+            });
+        } else {
+            // Si ocurre un error durante la solicitud (por ejemplo, problemas de red)
+            console.error('Error al obtener el pronóstico:', error.message);
+            res.status(500).json({ error: 'Error al obtener el pronóstico' });
         }
+    }
+    
 }
 
+// Pipi
 const getListByRainyDays = (req = request, res = response) => {  
     const { list, ...resto } = req.query;
     console.log("Codigo list by rainy days");
 }
 
+// Gabo
 const getListByCloudyDays = (req = request, res = response) => {  
     const { list, ...resto } = req.query;
     console.log("Codigo list by cloudy days");
 }
 
 module.exports = {
-    getListBySunnyDays,
+    getListWithDifferentUnits,
     getListByRainyDays,
     getListByCloudyDays
 };

@@ -26,9 +26,14 @@ class Server{
     }
 
     routers(){
-        this.app.use('/api/v1/getList50Length', require('../routes/getList50Length'));
         this.app.use('/api/v1/getById', require('../routes/getById'));
+        this.app.use('/api/v1/getList50Length', require('../routes/getList50Length'));
         this.app.use('/api/v1/getListFiltered', require('../routes/getListFiltered'));
+
+        this.app.all('*', (req, res) => {
+            res.status(404).json({message:'404 Page Not Found'})
+        })
+
     }
 
     listen(){

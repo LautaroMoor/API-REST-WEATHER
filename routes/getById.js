@@ -1,14 +1,14 @@
 const { Router } = require('express');
 const {
-    getWeatherByNumberDay,
-    getWeatherByLastRainyDay,
+    getWeatherByCity,
+    getWeatherByNextRainyDay,
     getWeatherByLastSunnyDay
 } = require('../controllers/getById');
 
 const rutas = Router();
 
-rutas.get('/:number', getWeatherByNumberDay);
-rutas.get('/lastRainy', getWeatherByLastRainyDay);
-rutas.get('/lastSunny', getWeatherByLastSunnyDay);
+rutas.get('/city', getWeatherByCity);
+rutas.get('/next-rainy-day', getWeatherByNextRainyDay);
+rutas.get('/next-sunny-day', getWeatherByLastSunnyDay);
 
 module.exports = rutas;
