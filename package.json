@@ -1,8 +1,7 @@
 {
   "name": "api-rest-weather",
   "version": "1.0.0",
-  "description": "",
-  "main": "app..js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
@@ -13,8 +12,11 @@
   "dependencies": {
     "axios": "^1.5.0",
     "cors": "^2.8.5",
+    "dot": "^1.1.3",
     "dotenv": "^16.3.1",
+    "env": "^0.0.2",
     "express": "^4.18.2",
     "nodemon": "^3.0.1"
-  }
+  },
+  "description": ""
 }
