@@ -13,7 +13,7 @@
 
 3. Procederemos a configurar las variables de entorno encontradas en el archivo **.env**.
 
-4. Una vez configuaradas las variables de entorno 
+4. Una vez configuaradas las variables de entorno(OPENWEATHERMAP_API_KEY y PORT) podrá utilizar la API  
 
 
 ## Endpoints y sus rutas
