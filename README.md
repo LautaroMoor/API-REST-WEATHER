@@ -23,17 +23,26 @@
 **Obtener el próximo día lluvioso por ciudad**
 ```GET /getById/next-rainy-day?city=nombreCiudad```
 
+**Obtener pronostico de siguiente dia soleado**
+```GET //getById//next-sunny-day?city=nombreCiudad```
+
 **Obtener lista de 30 registros de clima by ciudad**
 ```GET /getList50Length/next30weather?city=nombreCiudad```
 
 **Obtener lista de 30 registros de clima by ciudad**
 ```GET /getList50Length/next20weather?city=nombreCiudad```
 
+**Obtener lista de registros de los proximos domingos**
+```GET /getList50Length/nextsundays?city=nombreCiudad```
+
 **Obtener lista clima ciudad con unidad**
 ```GET /getListFiltered/next30WeatherUnits?city=nombreCiudad&units=unidadesPersonalizadas```
 
 **Obtener lista clima ciudad en diferentes lenguajes**
 ```GET /getListFiltered/next30WeatherLanguages?city=nombreCiudad&lang=idiomaPersonalizado```
+
+**Obtener lista del clima de la ciudad por encima de la temperatura ingresada**
+```GET /getListFiltered//temperature?city=nombreCiudad&temperature=temperaturaPersonalizada```
 
 
 ### Postman Documentation

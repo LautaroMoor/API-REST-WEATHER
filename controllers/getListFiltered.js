@@ -77,13 +77,52 @@ const getListWithDifferentLanguages  = async (req = request, res = response) => 
 }
 
 // Gabo
-const getListByCloudyDays = (req = request, res = response) => {  
-    const { list, ...resto } = req.query;
-    console.log("Codigo list by cloudy days");
+const getWeatherAboveTemperature = async (req = request, res = response) => {
+    try {
+        const { city, temperature } = req.query;
+        const lang = req.query.lang || 'es';
+
+        if (!city || !temperature) {
+            return res.status(400).json({ error: 'Debes proporcionar los parámetros city y temperature.' });
+        }
+
+        const response = await axios.get('https://api.openweathermap.org/data/2.5/forecast', {
+            params: {
+                q: city,
+                cnt: 30,
+                lang,
+                appid: OPENWEATHERMAP_API_KEY,
+                units: 'metric', // Utilizamos unidades métricas para temperatura en Celsius
+            },
+        });
+
+        const forecasts = response.data.list;
+
+        // Filtra los pronósticos para encontrar los días con temperatura por encima del valor proporcionado
+        const daysAboveTemperature = forecasts.filter((forecast) => {
+            return forecast.main.temp > parseFloat(temperature);
+        });
+
+        if (daysAboveTemperature.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron días con temperatura por encima de la especificada.' });
+        }
+
+        res.status(200).json({ daysAboveTemperature });
+    } catch (error) {
+        if (error.response) {
+            res.status(error.response.status).json({
+                cod: error.response.data.cod,
+                message: error.response.data.message,
+            });
+        } else {
+            console.error('Error al obtener el pronóstico:', error.message);
+            res.status(500).json({ error: 'Error al obtener el pronóstico' });
+        }
+    }
 }
 
 module.exports = {
     getListWithDifferentUnits,
     getListWithDifferentLanguages ,
-    getListByCloudyDays
+    getWeatherAboveTemperature
 };

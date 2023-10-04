@@ -101,13 +101,62 @@ const getWeatherByNextRainyDay = async (req = request, res = response) => {
 }
 
 // Cambiar Gabo
-const getWeatherByLastSunnyDay = (req = request, res = response) => {  
-    const { list, ...resto } = req.query;
-    console.log("Codigo by last sunny day");
+const getWeatherByNextSunnyDay = async (req = request, res = response) => {  
+    const { city } = req.query;
+    console.log("Código para el último día soleado");
+
+    try {
+        // Verifica si se dio el parámetro city
+        if (!city) {
+            return res.status(400).json({ error: 'Debes proporcionar el parámetro city.' });
+        }
+
+        // Realiza una solicitud a la API de OpenWeatherMap para obtener el pronóstico completo
+        const response = await axios.get('http://api.openweathermap.org/data/2.5/forecast', {
+            params: {
+                q: city,
+                appid: process.env.OPENWEATHERMAP_API_KEY,
+                lang: "es",
+                units: 'metric',
+            },
+        });
+
+        // Filtra los pronósticos para encontrar el siguiente día soleado
+        const forecasts = response.data.list;
+        let lastSunnyDay = null;
+
+        forecasts.forEach((forecast) => {
+            if (forecast.weather.some((weather) => weather.main.toLowerCase().includes('clear'))) {
+                lastSunnyDay = {
+                    date: new Date(forecast.dt * 1000), // Convierte la fecha Unix a formato legible
+                    temperature: forecast.main.temp,
+                    weatherDescription: forecast.weather[0].description,
+                };
+            }
+        });
+
+        if (!lastSunnyDay) {
+            return res.status(404).json({ message: 'No se encontraron días soleados en el pronóstico.' });
+        }
+
+        res.status(200).json({ lastSunnyDay });
+    } catch (error) {
+        if (error.response) {
+            // Si hay una respuesta de error desde la API de OpenWeather
+            res.status(error.response.status).json({
+                cod: error.response.data.cod,
+                message: error.response.data.message,
+            });
+        } else {
+            // Si ocurre un error durante la solicitud (por ejemplo, problemas de red)
+            console.error('Error al obtener el pronóstico extendido:', error.message);
+            res.status(500).json({ error: 'Error al obtener el pronóstico extendido' });
+        }
+    }
 }
 
 module.exports = {
     getWeatherByCity,
     getWeatherByNextRainyDay,
-    getWeatherByLastSunnyDay
+    getWeatherByNextSunnyDay
 };
